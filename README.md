@@ -4,6 +4,24 @@ Scaffold tool to create Vue 3 or React frontends fully integrated with the Frapp
 
 ---
 
+## Frappe version compatibility
+
+Compatible with **Frappe 15** and **Frappe 16**.
+
+| Element | Notes |
+|---|---|
+| `website_route_rules` hook | Core hook, stable since v13 |
+| `www/{path}/index.py` + `get_context` | Core website pattern, stable |
+| `no_cache = 1` | Respected by Frappe's template renderer |
+| `frappe.sessions.get_csrf_token()` | Stable across v15 and v16 |
+| `frappe.get_roles()`, `frappe._dict`, `frappe.local.site` | Core APIs, unchanged |
+| Jinja `{{ boot[key] \| tojson }}` | Standard Jinja2 filter, stable |
+| `bench build --app` via root `package.json` | Convention unchanged |
+
+> **Frappe 16 note:** requires Node.js 20 and Python 3.11. The templates have no Node version lock so they build fine on both. Avoid upgrading `frappe-ui` beyond `^0.1.x` without testing, as future major versions may drop Frappe 15 support.
+
+---
+
 ## Usage
 
 ```bash
