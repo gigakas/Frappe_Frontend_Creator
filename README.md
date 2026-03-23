@@ -1,18 +1,21 @@
-# Frappe Frontend Template
+# Frappe Frontend Creator
 
-Template base para crear frontends integrados con Frappe Framework. Soporta **Vue 3** y **React**.
+Scaffold tool to create Vue 3 or React frontends fully integrated with the Frappe Framework.
 
 ---
 
-## Uso
+## Usage
 
 ```bash
 bash init.sh
 ```
 
-El script detecta automáticamente el bench y guía el proceso:
+The script auto-detects the bench and guides the setup:
 
 ```
+  Frappe Frontend Template Initializer
+  ──────────────────────────────────────
+
   Framework:
     1) Vue 3
     2) React
@@ -38,138 +41,140 @@ El script detecta automáticamente el bench y guía el proceso:
 
 ---
 
-## Qué hace el script
+## What the script does
 
-1. Detecta el bench, lee `default_site` y `webserver_port` del config
-2. Lista las apps disponibles y pide seleccionar una
-3. Copia el template (Vue o React) a la carpeta indicada
-4. Reemplaza placeholders en todos los archivos
-5. Crea `{app_root}/package.json` para `bench build --app`
-6. Crea `{app}/www/{path}/index.py` (boot data para Jinja)
-7. Agrega `website_route_rules` en `hooks.py` (router history mode)
-8. Opcionalmente ejecuta `yarn install`
+1. Detects the bench and reads `default_site` and `webserver_port` from `common_site_config.json`
+2. Lists available apps and prompts to select one
+3. Copies the chosen template (Vue or React) to the specified folder
+4. Replaces `{{APP_NAME}}`, `{{FRONTEND_PATH}}`, and `{{FOLDER_NAME}}` placeholders in all files
+5. Creates `{app_root}/package.json` so `bench build --app` works
+6. Creates `{app}/www/{path}/index.py` — Python controller that injects boot data into the Jinja template
+7. Appends `website_route_rules` to `hooks.py` for SPA history-mode routing
+8. Optionally runs `yarn install`
 
 ---
 
-## Primeros pasos post-instalación
+## Post-install first steps
 
 ```bash
-# 1. Instalar la app en el site (requerido la primera vez)
+# 1. Install the app in the site (required — Frappe won't serve www/ pages otherwise)
 cd /path/to/frappe-bench
 bench --site <site_name> install-app <app_name>
 
-# 2. Build inicial
+# 2. Initial build
 bench build --app <app_name>
 ```
 
 ---
 
-## Modos de desarrollo
+## Development modes
 
-### Con vite dev server (HMR)
+### Vite dev server (HMR)
 
 ```bash
 cd <frontend_folder>
 yarn dev
 ```
 
-Accede en `http://<site>:8080/<url_path>/` — los cambios se reflejan en tiempo real sin recargar.
+Access at `http://<site>:8080/<url_path>/` — changes are reflected instantly without a full reload.
 
-### Sin vite, usando solo bench
+### Watch mode without Vite (bench only)
 
 ```bash
-# Terminal 1 — rebuild automático al guardar
+# Terminal 1 — rebuild on save
 cd <frontend_folder>
 yarn build --watch
 
-# Terminal 2 — servidor Frappe
+# Terminal 2 — Frappe server
 cd /path/to/frappe-bench
 bench start
 ```
 
-Accede en `http://<site>:8000/<url_path>/` — sin HMR, recarga el browser manualmente.
+Access at `http://<site>:8000/<url_path>/` — no HMR, refresh the browser manually.
 
 ---
 
-## Otros comandos
+## Other commands
 
 ```bash
-yarn build        # Build de producción
-yarn type-check   # Verificación TypeScript
-yarn lint         # Biome lint + formato
-yarn test:run     # Tests (vitest)
+yarn build        # Production build
+yarn type-check   # TypeScript check
+yarn lint         # Biome lint + format
+yarn test:run     # Run tests (vitest)
 ```
 
 ---
 
-## Salida del build
+## Build output
 
 ```
-apps/<app_name>/<app_name>/public/<folder_name>/    # Assets JS/CSS
-apps/<app_name>/<app_name>/www/<url_path>/index.html
+apps/<app_name>/<app_name>/public/<folder_name>/     # JS/CSS assets
+apps/<app_name>/<app_name>/www/<url_path>/index.html # Jinja template (generated on build)
 ```
 
 ---
 
-## Stack por framework
+## Stack by framework
 
 ### Vue 3
 
-| Categoría     | Librería                          |
-|---------------|-----------------------------------|
-| UI Framework  | Vue 3 + TypeScript                |
-| Build         | Vite + frappe-ui/vite             |
-| Router        | Vue Router (`createWebHistory`)   |
-| State         | Pinia                             |
+| Category      | Library                              |
+|---------------|--------------------------------------|
+| UI Framework  | Vue 3 + TypeScript                   |
+| Build         | Vite + frappe-ui/vite                |
+| Router        | Vue Router (`createWebHistory`)      |
+| State         | Pinia                                |
 | API           | frappe-ui (`call`, `createResource`) |
-| Estilos       | Tailwind CSS + preset frappe-ui   |
-| Iconos        | unplugin-icons + lucide           |
-| Tiempo real   | Socket.io                         |
-| Validación    | Zod                               |
-| Linting       | Biome                             |
+| Styles        | Tailwind CSS + frappe-ui preset      |
+| Icons         | unplugin-icons v23 + lucide          |
+| Realtime      | Socket.io                            |
+| Validation    | Zod                                  |
+| Linting       | Biome                                |
 
 ### React
 
-| Categoría     | Librería                          |
-|---------------|-----------------------------------|
-| UI Framework  | React 18 + TypeScript             |
-| Build         | Vite + frappe-ui/vite             |
-| Router        | React Router v6 (`createBrowserRouter`) |
-| State         | Zustand                           |
-| Server state  | TanStack Query                    |
-| API           | `utils/frappe.ts` (`call`, `db.*`) |
-| Estilos       | Tailwind CSS + preset frappe-ui   |
-| Iconos        | lucide-react                      |
-| Validación    | Zod                               |
-| Linting       | Biome                             |
+| Category      | Library                                     |
+|---------------|---------------------------------------------|
+| UI Framework  | React 18 + TypeScript                       |
+| Build         | Vite + frappe-ui/vite (proxy only)          |
+| Router        | React Router v6 (`createBrowserRouter`)     |
+| State         | Zustand                                     |
+| Server state  | TanStack Query v5                           |
+| API           | `utils/frappe.ts` (`call`, `db.*`)          |
+| Styles        | Tailwind CSS + frappe-ui preset             |
+| Icons         | lucide-react                                |
+| Validation    | Zod                                         |
+| Linting       | Biome                                       |
+
+> **Note (React):** `frappe-ui/vite` is used only for the dev proxy (`frappeProxy: true`). Jinja HTML generation is handled by a custom `frappeJinjaPlugin` built into `vite.config.js`, since `jinjaBootData` from frappe-ui is Vue-specific.
 
 ---
 
-## Estructura generada
+## Generated structure
 
 ### Vue 3
 
 ```
 <folder>/
 ├── src/
-│   ├── main.ts                  # Entry point
-│   ├── App.vue                  # Root component
-│   ├── index.css                # Tailwind + frappe-ui styles
-│   ├── socket.ts                # Socket.io
-│   ├── router/index.ts          # Vue Router
-│   ├── stores/auth.ts           # Auth store (Pinia)
-│   ├── types/index.ts           # Tipos Frappe
+│   ├── main.ts                    # Entry point
+│   ├── App.vue                    # Root component
+│   ├── index.css                  # Tailwind + frappe-ui styles
+│   ├── socket.ts                  # Socket.io
+│   ├── router/index.ts            # Vue Router
+│   ├── stores/auth.ts             # Auth store (Pinia)
+│   ├── types/index.ts             # Frappe types
 │   ├── composables/useScreenSize.ts
 │   ├── utils/
-│   │   ├── index.ts             # Helpers generales
-│   │   ├── formHelpers.ts       # Helpers de formularios
-│   │   └── validators.ts        # Schemas Zod
-│   ├── layouts/AppLayout.vue    # Layout base
+│   │   ├── index.ts               # General helpers
+│   │   ├── formHelpers.ts         # Form helpers
+│   │   └── validators.ts          # Zod schemas
+│   ├── layouts/AppLayout.vue      # Base layout
 │   ├── components/
 │   │   ├── Dialogs.vue
 │   │   └── common/
 │   └── pages/
-│       ├── Home.vue
+│       ├── Home.vue               # Demo page — Vue badge
 │       └── NotFound.vue
 └── vite.config.js
 ```
@@ -179,27 +184,27 @@ apps/<app_name>/<app_name>/www/<url_path>/index.html
 ```
 <folder>/
 ├── src/
-│   ├── main.tsx                 # Entry point
-│   ├── index.css                # Tailwind + frappe-ui styles
-│   ├── router/index.tsx         # React Router
-│   ├── store/auth.ts            # Auth store (Zustand)
-│   ├── types/index.ts           # Tipos Frappe
+│   ├── main.tsx                   # Entry point
+│   ├── index.css                  # Tailwind + frappe-ui styles
+│   ├── router/index.tsx           # React Router
+│   ├── store/auth.ts              # Auth store (Zustand)
+│   ├── types/index.ts             # Frappe types
 │   ├── hooks/useScreenSize.ts
 │   ├── utils/
-│   │   ├── index.ts             # Helpers generales
-│   │   └── frappe.ts            # API helpers (call, db.*)
-│   ├── layouts/AppLayout.tsx    # Layout base
+│   │   ├── index.ts               # General helpers
+│   │   └── frappe.ts              # API helpers (call, db.*)
+│   ├── layouts/AppLayout.tsx      # Base layout
 │   └── pages/
-│       ├── Home.tsx
+│       ├── Home.tsx               # Demo page — React badge
 │       └── NotFound.tsx
 └── vite.config.js
 ```
 
 ---
 
-## Personalización post-init
+## Customization
 
-### Llamadas a la API Frappe
+### Frappe API calls
 
 **Vue:**
 ```ts
@@ -215,17 +220,17 @@ list.fetch()
 import { call, db } from "@/utils/frappe"
 import { useQuery } from "@tanstack/react-query"
 
-// Llamada directa
+// Direct call
 const result = await call("myapp.api.my_function", { param: "value" })
 
-// Con TanStack Query
+// With TanStack Query
 const { data } = useQuery({
   queryKey: ["my-list"],
   queryFn: () => db.getList("MyDoctype", { fields: ["name", "title"] }),
 })
 ```
 
-### Agregar rutas
+### Adding routes
 
 **Vue** — `src/router/index.ts`:
 ```ts
@@ -233,7 +238,7 @@ const { data } = useQuery({
   path: "/my-page",
   name: "MyPage",
   component: () => import("@/pages/MyPage.vue"),
-  meta: { title: "Mi Página" },
+  meta: { title: "My Page" },
 }
 ```
 
@@ -244,3 +249,17 @@ const { data } = useQuery({
   element: <MyPage />,
 }
 ```
+
+### Boot data
+
+The `www/{path}/index.py` controller exposes the following fields to the frontend at page load via `window.*`:
+
+| Key              | Description                        |
+|------------------|------------------------------------|
+| `user`           | Logged-in username                 |
+| `roles`          | User roles array                   |
+| `csrf_token`     | CSRF token for API calls           |
+| `site_name`      | Current site name                  |
+| `setup_complete` | Whether site setup is finished     |
+
+Add more fields by editing `get_boot()` in `www/{path}/index.py`.
