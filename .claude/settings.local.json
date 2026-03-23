@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python3:*)",
+      "Bash(npm show:*)",
+      "Bash(cp:*)",
+      "Bash(mkdir:*)",
+      "Bash(yarn build:*)",
+      "Bash(yarn install:*)",
+      "Bash(node:*)"
+    ]
+  }
+}
