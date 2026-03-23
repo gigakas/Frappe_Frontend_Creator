@@ -89,6 +89,8 @@ bench build --app <app_name>
 
 ### Vite dev server (HMR)
 
+**HMR (Hot Module Replacement):** when the dev server detects a file change, it replaces only that module in the browser in real time — no full page reload, no lost app state. For example, editing a component updates only that component on screen as soon as you save.
+
 ```bash
 cd <frontend_folder>
 yarn dev
